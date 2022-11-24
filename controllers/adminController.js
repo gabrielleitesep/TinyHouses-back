@@ -43,5 +43,30 @@ export async function loginAdmin(req, res) {
     }
 };
 
+export async function logoutAdmin(req, res) {
+
+    const { authorization } = req.headers;
+    const token = authorization?.replace("Bearer ", "");
+
+    if (!token) {
+        return res.sendStatus(401);
+    }
+
+    try {
+        const openedSession = await adminActiveCollection.findOne({ token });
+
+        if (!openedSession) {
+            return res.sendStatus(401);
+        };
+
+        await adminActiveCollection.deleteOne({ token });
+
+        res.sendStatus(200);
+
+    } catch (err) {
+        res.sendStatus(500);
+    };
+};
+
 
 
