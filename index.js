@@ -3,8 +3,9 @@ import express from "express";
 import cors from "cors";
 import { MongoClient } from "mongodb";
 import userRoute from "./routes/userRoute.js";
-import adminRoutes from "./routes/adminRoutes.js"
+import adminRoutes from "./routes/adminRoutes.js";
 import productRegistrationRoutes from "./routes/productRegistrationRoutes.js";
+import productsRoutes from "./routes/productsRoutes.js";
 
 dotenv.config()
 const app = express()
@@ -31,5 +32,6 @@ export const adminActiveCollection = db.collection("admin_active");
 app.use(userRoute);
 app.use(adminRoutes);
 app.use(productRegistrationRoutes);
+app.use(productsRoutes)
 
 app.listen(process.env.PORT, () => console.log(`App rodando na porta ${process.env.PORT}`));

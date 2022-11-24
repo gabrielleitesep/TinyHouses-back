@@ -53,4 +53,14 @@ let productsList = [
         "area": "10 m2",
         "price": "30000.00"
     },
+    {
+        "_id": "637f7c958bfe5b2c30ede9d9",
+        "title": "Casa pré-fabricada Allwood Palma 3",
+        "image": "https://st3.idealista.pt/news/arquivos/styles/fullwidth_xl/public/2021-11/casa_prefabbricata_di_amazon_0.jpg?VersionId=kejRVAZHdbhi_yineVT_YVqzrRruHk8B&itok=laMXh0ru",
+        "description": "Minicasa de layout agradável, possui grandes janelas que fazem o interior parecer maior.",
+        "maker": "Alwood",
+        "guarantee": "3 anos",
+        "area": "16,35 m2",
+        "price": "48000.00"
+    }
 ];
