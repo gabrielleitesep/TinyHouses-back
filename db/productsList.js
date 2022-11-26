@@ -62,5 +62,14 @@ let productsList = [
         "guarantee": "3 anos",
         "area": "16,35 m2",
         "price": "48000.00"
+    },
+    {
+        "title": "Chalet de Jardim",
+        "image": "https://st3.idealista.pt/news/arquivos/styles/fullwidth_xl/public/2021-11/chalet_prefabbricato.jpg?VersionId=r2jnqxahhN7bxQy4kMz41wdVQOpHS2dn&itok=spltDyw5",
+        "description": "Esta casa pré-fabricada possui uma área útil de 16,2 m2 no interior, mais 3,07 m2 de varanda. É ideal para acrescentar um ambiente extra à casa, talvez uma sala de jogos, de música ou mesmo um estúdio de pintura.",
+        "maker": "Amazon",
+        "guarantee": "3 anos",
+        "area": "19,27 m2",
+        "price": "30000.00"
     }
 ];

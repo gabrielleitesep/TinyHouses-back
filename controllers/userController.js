@@ -1,22 +1,25 @@
-import { usuariosCollection, atividadeCollection, adminCollection } from "../index.js";
+import { usuariosCollection, atividadeCollection } from "../index.js";
 import joi from "joi"
 import bcrypt from "bcrypt";
 import { v4 as uuidV4 } from "uuid";
 
+//to create an admin user, use "type: admin" (line 38)
 const cadastroJOI = joi.object({
-    name: joi.string().required().min(1),
-    email: joi.string().email().required().min(1),
-    password: joi.string().required().min(1),
+    name: joi.string().required().min(2).max(50),
+    email: joi.string().email().required().min(6).max(50),
+    cpf: joi.number().required().min(11).max(11),
+    address: joi.string().required().min(20).max(100),
+    password: joi.string().required().min(4).max(8),
 });
 
 const loginJOI = joi.object({
-    email: joi.string().email().required().min(1),
-    password: joi.string().required().min(1),
+    email: joi.string().email().required().min(6).max(50),
+    password: joi.string().required().min(4).max(8),
 });
 
 export async function cadastro(req, res) {
 
-    const { name, email, password, type } = req.body;
+    const { name, email, cpf, address, password } = req.body;
     const hashPassword = bcrypt.hashSync(password, 3);
     const validacao = cadastroJOI.validate({ name, email, password }, { abortEarly: false })
 
@@ -26,23 +29,18 @@ export async function cadastro(req, res) {
         return
     };
 
-    if (type === "admin") {
-        try {
-            await adminCollection.insertOne({ name, email, password: hashPassword, type });
-            res.sendStatus(201);
-        } catch (err) {
-            res.sendStatus(500);
-        }
-        return
-    };
-
     try {
-        await usuariosCollection.insertOne({ name, email, password: hashPassword });
+        const emailExistente = await usuariosCollection.findOne({ email });
+        if (emailExistente) {
+            return res.status(409).send("E-mail já cadastrado");
+        };
+
+        await atividadeCollection.insertOne({ name, email, cpf, address, password: hashPassword, type: "user" });
         res.sendStatus(201);
 
     } catch (err) {
         return res.sendStatus(500);
-    }
+    };
 };
 
 export async function login(req, res) {
@@ -58,24 +56,54 @@ export async function login(req, res) {
     };
 
     try {
-        const existente = await usuariosCollection.findOne({ email });        
+        const existente = await usuariosCollection.findOne({ email });
         if (!existente) {
             return res.sendStatus(401);
-        }
+        };
 
         const encriptada = bcrypt.compareSync(password, existente.password);
         if (!encriptada) {
             return res.sendStatus(401);
-        }
+        };
+
+        const sessaoAberta = await atividadeCollection.findOne({ userId: existente._id });
+
+        if (sessaoAberta) {
+            await atividadeCollection.deleteOne({ userId: existente._id });
+        };
 
         await atividadeCollection.insertOne({ token, userId: existente._id });
 
-        res.send({ token });
+        res.status(200).send({ token, existente });
 
     } catch (err) {
         res.sendStatus(500);
         console.log(err)
-    }
+    };
+};
+
+export async function logout(req, res) {
+    const { authorization } = req.headers;
+    const token = authorization?.replace("Bearer ", "");
+
+    if (!token) {
+        return res.sendStatus(401);
+    };
+
+    try {
+        const openedSession = await atividadeCollection.findOne({ token });
+
+        if (!openedSession) {
+            return res.sendStatus(401);
+        };
+
+        await atividadeCollection.deleteOne({ token });
+
+        res.sendStatus(200);
+
+    } catch (err) {
+        res.sendStatus(500);
+    };
 };
 
 

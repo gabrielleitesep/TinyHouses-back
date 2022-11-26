@@ -1,4 +1,4 @@
-import { adminActiveCollection, productsCollection } from "../index.js";
+import { atividadeCollection, productsCollection } from "../index.js";
 import joi from "joi";
 
 const productSchema = joi.object({
@@ -22,7 +22,7 @@ export async function productRegistration(req, res) {
     };  
 
     try {
-        const session = await adminActiveCollection.findOne({ token });
+        const session = await atividadeCollection.findOne({ token });
 
         if (!session) {
             return res.sendStatus(401);
