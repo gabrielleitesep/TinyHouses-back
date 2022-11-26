@@ -71,5 +71,14 @@ let productsList = [
         "guarantee": "3 anos",
         "area": "19,27 m2",
         "price": "30000.00"
+    },
+    {
+        "title": "Minicasa de madeira",
+        "image": "https://st3.idealista.pt/news/arquivos/styles/fullwidth_xl/public/2021-11/casa_prefabbricata_su_amazon.jpg?VersionId=u5cuMeeayPbebrns4IMZIcCkDkXTp20W&itok=-iWt7DXw",
+        "description": "Esta minicasa possui dupla vedação com paredes de 34 mm de espessura para garantir um ambiente mais acolhedor. Tem vigas de fundação resistentes e tratadas para uma construção sólida e durável.",
+        "maker": "Amazon",
+        "guarantee": "3 anos",
+        "area": "14,3 m2",
+        "price": "48000.00"
     }
 ];

@@ -25,6 +25,7 @@ try {
 
 export const usuariosCollection = db.collection("usuarios");
 export const atividadeCollection = db.collection("atividade");
+export const atividadeAdminCollection = db.collection("atividade-admin");
 export const productsCollection = db.collection("products");
 export const carrinhoCollection = db.collection("carrinho");
 

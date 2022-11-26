@@ -1,4 +1,4 @@
-import { atividadeCollection, productsCollection } from "../index.js";
+import { atividadeAdminCollection, productsCollection } from "../index.js";
 import joi from "joi";
 
 const productSchema = joi.object({
@@ -14,6 +14,7 @@ const productSchema = joi.object({
 export async function productRegistration(req, res) {
 
     const { title, image, description, maker, guarantee, area, price } = req.body;
+    console.log(req.body)
     const { authorization } = req.headers;
     const token = authorization?.replace("Bearer ", "");
 
@@ -22,14 +23,12 @@ export async function productRegistration(req, res) {
     };  
 
     try {
-        const session = await atividadeCollection.findOne({ token });
-
-        if (!session) {
+        const openedSession = await atividadeAdminCollection.findOne({ token });
+        if (!openedSession) {
             return res.sendStatus(401);
         };
     
-        const validation = productSchema.validate({ title, image, description, maker, guarantee, area, price }, { abortEarly: false });
-    
+        const validation = productSchema.validate({ title, image, description, maker, guarantee, area, price }, { abortEarly: false });    
         if (validation.error) {
             const err = validation.error.details.map((d) => d.message);
             return res.status(422).send(err);

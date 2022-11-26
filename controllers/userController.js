@@ -1,13 +1,12 @@
-import { usuariosCollection, atividadeCollection } from "../index.js";
+import { usuariosCollection, atividadeCollection, atividadeAdminCollection } from "../index.js";
 import joi from "joi"
 import bcrypt from "bcrypt";
 import { v4 as uuidV4 } from "uuid";
 
-//to create an admin user, use "type: admin" (line 38)
 const cadastroJOI = joi.object({
     name: joi.string().required().min(2).max(50),
     email: joi.string().email().required().min(6).max(50),
-    cpf: joi.number().required().min(11).max(11),
+    cpf: joi.number().required(),
     address: joi.string().required().min(20).max(100),
     password: joi.string().required().min(4).max(8),
 });
@@ -17,11 +16,12 @@ const loginJOI = joi.object({
     password: joi.string().required().min(4).max(8),
 });
 
+//to create an admin user, use "type: admin" (line 38)
 export async function cadastro(req, res) {
 
     const { name, email, cpf, address, password } = req.body;
     const hashPassword = bcrypt.hashSync(password, 3);
-    const validacao = cadastroJOI.validate({ name, email, password }, { abortEarly: false })
+    const validacao = cadastroJOI.validate({ name, email, cpf, address, password }, { abortEarly: false })
 
     if (validacao.error) {
         const erros = validacao.error.details.map((d) => d.message)
@@ -35,7 +35,7 @@ export async function cadastro(req, res) {
             return res.status(409).send("E-mail já cadastrado");
         };
 
-        await atividadeCollection.insertOne({ name, email, cpf, address, password: hashPassword, type: "user" });
+        await usuariosCollection.insertOne({ name, email, cpf, address, password: hashPassword, type: "user" });
         res.sendStatus(201);
 
     } catch (err) {
@@ -61,6 +61,12 @@ export async function login(req, res) {
             return res.sendStatus(401);
         };
 
+        const userType = existente.type;
+
+        if (userType === "admin") {
+            await atividadeAdminCollection.insertOne({ token, userId: existente._id });
+        };
+
         const encriptada = bcrypt.compareSync(password, existente.password);
         if (!encriptada) {
             return res.sendStatus(401);
@@ -74,11 +80,11 @@ export async function login(req, res) {
 
         await atividadeCollection.insertOne({ token, userId: existente._id });
 
-        res.status(200).send({ token, existente });
+        res.status(200).send({ token, userType });
 
     } catch (err) {
         res.sendStatus(500);
-        console.log(err)
+        console.log(err);
     };
 };
 
