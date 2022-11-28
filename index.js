@@ -6,6 +6,7 @@ import userRoute from "./routes/userRoute.js";
 import productRegistrationRoutes from "./routes/productRegistrationRoutes.js";
 import productsRoutes from "./routes/productsRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import finishRoute from "./routes/finishRoute.js"
 
 dotenv.config();
 const app = express();
@@ -28,10 +29,13 @@ export const atividadeCollection = db.collection("atividade");
 export const atividadeAdminCollection = db.collection("atividade-admin");
 export const productsCollection = db.collection("products");
 export const carrinhoCollection = db.collection("carrinho");
+export const vendasCollection = db.collection("vendas");
 
 app.use(userRoute);
 app.use(productRegistrationRoutes);
 app.use(productsRoutes);
 app.use(cartRoutes);
+app.use(finishRoute);
+
 
 app.listen(process.env.PORT, () => console.log(`App rodando na porta ${process.env.PORT}`));
