@@ -62,7 +62,6 @@ export async function login(req, res) {
         };
 
         const userType = existente.type;
-
         if (userType === "admin") {
             await atividadeAdminCollection.insertOne({ token, userId: existente._id });
         };
@@ -73,7 +72,6 @@ export async function login(req, res) {
         };
 
         const sessaoAberta = await atividadeCollection.findOne({ userId: existente._id });
-
         if (sessaoAberta) {
             await atividadeCollection.deleteOne({ userId: existente._id });
         };
@@ -99,13 +97,17 @@ export async function logout(req, res) {
     try {
         const openedSession = await atividadeCollection.findOne({ token });
 
-        if (!openedSession) {
-            return res.sendStatus(401);
+        if (openedSession) {
+            await atividadeCollection.deleteOne({ token });
+            res.sendStatus(200);            
         };
 
-        await atividadeCollection.deleteOne({ token });
+        const openedSessionAdmin = await atividadeAdminCollection.findOne({ token });
 
-        res.sendStatus(200);
+        if (openedSessionAdmin) {
+            await atividadeAdminCollection.deleteOne({ token });
+            res.sendStatus(200);  
+        };       
 
     } catch (err) {
         res.sendStatus(500);
