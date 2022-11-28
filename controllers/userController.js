@@ -16,7 +16,7 @@ const loginJOI = joi.object({
     password: joi.string().required().min(4).max(8),
 });
 
-//to create an admin user, use "type: admin" (line 38)
+//to product registration, use adm@adm.com pass 1234 or use "type: admin" (line 38) to create a new admin user
 export async function cadastro(req, res) {
 
     const { name, email, cpf, address, password } = req.body;

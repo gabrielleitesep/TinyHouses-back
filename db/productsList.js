@@ -80,5 +80,14 @@ let productsList = [
         "guarantee": "3 anos",
         "area": "14,3 m2",
         "price": "48000.00"
+    },
+    {
+        title: "Minicasa Allwood Arlanda XL",
+        image: "https://allwoodoutlet.com/image/cache/catalog/Cabin%20kits/Arlanda/Arlanda%2021%20natural%201K-600x451w.jpg",
+        description: "Este design urbano atemporal é uma alternativa às estruturas clássicas. É feito de madeira sólida de abeto nórdico e permite adicionar um banheiro ou quarto extra na planta.",
+        maker: "Allwood",
+        guarantee: "3 anos",
+        area: "21,09 m2",
+        price: "60000.00"
     }
 ];
